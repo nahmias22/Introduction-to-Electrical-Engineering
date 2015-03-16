@@ -17,7 +17,8 @@
 \usepackage{xfrac} %inline fractions
 \usepackage{enumerate} %numbered lists
 \usepackage{float} %inserting floats
-\usepackage{circuitikz} %circuit diagrams
+\usepackage[american voltages]{circuitikz} %circuit diagrams
+\usepackage{titlesec}
 
 \newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}} %adds numbers to specific equations in non-numbered list of equations
 
@@ -37,6 +38,17 @@
 \makeatletter
 \@addtoreset{section}{part} %resets section numbers in new part
 \makeatother
+
+\newcommand{\partbreak}{\clearpage} %starts every part on a new page
+
+\newcommand\blfootnote[1]{%
+	\begingroup
+	\renewcommand\thefootnote{}\footnote{#1}%
+	\addtocounter{footnote}{-1}%
+	\endgroup
+}
+
+\SetupExSheets{solution/print = true}
 
 %opening
 \title{Introduction to Electrical Engineering}
@@ -277,6 +289,47 @@ $R$ is called the resistance and $G$ is called the conductance.
 	\therefore v &= V_0 - R_s i
 \end{align*}
 
+\subsection{Capacitor}
+
+\begin{definition}[Capacitor]
+	A capacitor is a two terminal device where $V$ is a fucntion of $q$.
+	\begin{figure}[H]
+		\begin{circuitikz}
+			\draw (0,0) to [C] (5,0);
+		\end{circuitikz}
+	\end{figure}
+\end{definition}
+
+\subsubsection{Linear Capacitors}
+
+If the charges on the terminals of a capacitor are $+q$ and $-q$, and the potential difference across it is $v$, the ratio between $q$ and $v$ is said to be the capacitance.\\
+The unit of capacitance is farad or $\si{\farad}$.
+\begin{align*}
+	q &= C v\\
+	\therefore i &= C \dod{v}{t}\\
+	\therefore v(t) &= v(t_0) + \dfrac{1}{C} \int\limits_{t_0}^{t} i(t) \dif t
+\end{align*}
+\begin{figure}[H]
+	\begin{circuitikz}
+		\draw (0,0) to [C, v = $v$] (5,0);
+	\end{circuitikz}
+\end{figure}
+
+\subsection{Inductor}
+
+\begin{definition}[Inductor]
+	\begin{figure}[H]
+		\begin{circuitikz}
+			\draw (0,0) to [L, v = $v(t)$, i> = $i(t)$] (5,0);
+		\end{circuitikz}
+	\end{figure}
+	\begin{align*}
+		v(t) &= \dod{\varphi}{t}\\
+		\therefore v(t) &= L \dod{i}{t}\\
+		\therefore i(t) &= i(t_0) + \dfrac{1}{L} \int\limits_{t_0}^{t} v(t) \dif t
+	\end{align*}
+\end{definition}
+
 \section{Waveforms}
 
 \subsection{DC (Constant Function)}
@@ -408,12 +461,7 @@ $R$ is called the resistance and $G$ is called the conductance.
 	\delta' (t) &= \dod{\delta(t)}{t}
 \end{align*}
 
-\subsection*{}
-\begin{align*}
-	\int\limits_{-\infty}^{t} u(t') \dif t' &= r(t)\\
-	\dod{}{t} r(t) &= u(t)\\
-	u(t) &= \int\limits_{-\infty}^{t} \delta(t') \dif t\\
-\end{align*}
+\subsection{Relation Between Standard Waveforms}
 
 \begin{equation*}
 	r(t) \xrightleftharpoons[\int_{-\infty}^{t}]{\od{}{t}} u(t) \xrightleftharpoons[\int_{-\infty}^{t}]{\od{}{t}} \delta(t) \xrightleftharpoons[\int_{-\infty}^{t}]{\od{}{t}} \delta' (t) 
@@ -438,7 +486,7 @@ $R$ is called the resistance and $G$ is called the conductance.
 	\end{figure}
 \end{question}
 
-\begin{solution}[print]
+\begin{solution}
 	\begin{equation*}
 		f(t) = u(t - 1) + u(t - 2)
 	\end{equation*}
@@ -463,10 +511,74 @@ $R$ is called the resistance and $G$ is called the conductance.
 	\end{figure}
 \end{question}
 
-\begin{solution}[print]
+\begin{solution}
 	\begin{equation*}
 		f(t) = r(t) + r(t - 1)
 	\end{equation*}
 \end{solution}
 
+\section{Power and Energy}
+
+The instantaneous power supplied to a load is
+\begin{align*}
+	P(t) &= v(t) \cdot i(t)
+\end{align*}
+where $v(t)$ and $i(t)$ are in matched directions.
+
+The energy supplied to a load from time $t_0$ to time $t$ is
+\begin{align*}
+	W(t_0, t) &= \int\limits_{t_0}^{t} P(t) \dif t\\
+	&= \int\limits_{t_0}^{t} v(t) \cdot i(t) \dif t
+\end{align*}
+
+\subsection{Energy Stored in a Capacitor}
+
+\begin{align*}
+	W(t_0, t) &= \int\limits_{t_0}^{t} v(t) i(t) \dif t\\
+	\intertext{As $i(t) = \dod{q}{t}$, $\dif q = i(t) \dif t$. Therefore,}
+	W(t_0, t) &= \int\limits_{q(t_0)}^{q(t)} v(q) \dif q\\
+	&= \int\limits_{q(t_0)}^{q(t)} \dfrac{q}{C} \dif q\\
+	&= \dfrac{q^2}{2c}\\
+	&= \dfrac{1}{2} c v^2
+\end{align*}
+
+\subsection{Energy Stored in an Inductor}
+
+\begin{align*}
+	W(t_0, t) &= \int\limits_{t_0}^{t} v(t) i(t) \dif t\\
+	\intertext{As $v(t) = \dod{\varphi}{t}$, $\dif \varphi = v(t) \dif t$. Therefore,}
+	W(t_0, t) &= \int\limits_{\varphi(t_0)}^{\varphi(t)} i(\varphi) \dif \varphi\\
+	&= \dfrac{\varphi^2}{2 L}\\
+	&= \dfrac{1}{2} L i^2
+\end{align*}
+
+\part{Simple Circuits}
+
+\section{Equivalent Circuits}
+
+\begin{definition}
+	Two circuits are said to be equivalent if they have the same $v(t)$-$i(t)$ relationships.
+\end{definition}
+
+\begin{figure}[H]
+	\begin{circuitikz}
+		\draw (0,0) to [R = $R_1$] (2,0) to [R = $R_2$] (4,0); 
+	\end{circuitikz}
+\end{figure}
+
+Let the voltage across $R_1$ be $v_1$ and across $R_2$ be $v_2$.\\
+Let the current through $R_1$ be $i_1$ and through $R_2$ be $i_2$.\\
+Therefore,
+\begin{align*}
+	v_1 &= f_1(i_1)\\
+	v_2 &= f_2(i_2)
+\end{align*}
+Therefore,
+\begin{align*}
+	v &= v_1 + v_2\\
+	&= f_1(i_1) + f_2(i_2)\\
+	&= f_1(i) + f_2(i)\\
+	&= f_3(i)
+\end{align*}
+Therefore, the system of resistors is equivalent to a single resistor $R_3$.
 \end{document}
