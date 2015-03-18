@@ -17,8 +17,7 @@
 \usepackage{xfrac} %inline fractions
 \usepackage{enumerate} %numbered lists
 \usepackage{float} %inserting floats
-\usepackage[american voltages]{circuitikz} %circuit diagrams
-\usepackage{titlesec}
+\usepackage[american voltages, american currents]{circuitikz} %circuit diagrams
 
 \newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}} %adds numbers to specific equations in non-numbered list of equations
 
@@ -32,6 +31,7 @@
 
 \theoremstyle{theorem}
 \newtheorem{theorem}{Theorem}
+\newtheorem{law}{Law}
 
 \newcommand{\curl}{\mathrm{curl\,}}
 
@@ -59,6 +59,17 @@
 
 \maketitle
 %\setlength{\mathindent}{0pt}
+
+\blfootnote
+{	
+	\begin{figure}[H]
+		\includegraphics[height = 12pt]{cc.eps}
+		\includegraphics[height = 12pt]{by.eps}
+		\includegraphics[height = 12pt]{nc.eps}
+		\includegraphics[height = 12pt]{sa.eps}
+	\end{figure}
+	This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License. To view a copy of this license, visit \url{http://creativecommons.org/licenses/by-nc-sa/4.0/}.
+} %CC-BY-NC-SA licencse
 
 \tableofcontents
 
@@ -114,7 +125,9 @@ C.A. Desoer and E.S. Kuh: \textit{Basic Circuit Theory}, Mc-Graw-Hill, Internati
 
 \subsection{Kirchoff's Current Law}
 
-The sum of all currents entering or exiting a node is zero.
+\begin{law}[Kirchoff's Current Law]\label{KCL}
+	The sum of all currents entering or exiting a node is zero.
+\end{law}
 \begin{figure}[H]
 	\begin{circuitikz}[scale = 0.8]
 		\draw (0,0) to [generic, *-*, i<=$i_2$] (5,5) to [generic, *-*, i<=$i_1$] (10,0);
@@ -129,7 +142,9 @@ The sum of all currents entering or exiting a node is zero.
 
 \subsection{Kirchoff's Voltage Law}
 
-The sum of all branch voltages along a closed loop is zero.
+\begin{law}[Kirchoff's Voltage Law]\label{KVL}
+	The sum of all branch voltages along a closed loop is zero.
+\end{law}
 \begin{figure}[H]
 	\begin{circuitikz}[american voltages]
 		\draw (0,0) to [generic = 1, v<=$v_1$] (0,5) to [generic = 2, v<=$v_2$] (0,10) -- (5,10) to [generic = 3, v<=$v_3$] (5,5) to [generic = 5, v>=$v_5$] (5,0) -- (0,0);
@@ -206,6 +221,18 @@ $R$ is called the resistance and $G$ is called the conductance.
 		\end{scope}
 			
 		\draw (-4,\reverseCurrent) to [out = 0, in = 190] (0,0) to [out = 10, in = 260] (2,4);
+	\end{tikzpicture}
+\end{figure}
+
+An ideal diode has a $i$-$v$ graph like
+\begin{figure}[H]
+	\begin{tikzpicture}[scale = 0.5]
+		\begin{scope}[stealth-stealth, lightgray]
+			\draw (-5,0) -- (5,0) node [right] {$v$};
+			\draw (0,-5) -- (0,5) node [above] {$i$};
+		\end{scope}
+		
+		\draw (-4,0) -- (0,0) -- (0,4);;
 	\end{tikzpicture}
 \end{figure}
 
@@ -552,6 +579,7 @@ The energy supplied to a load from time $t_0$ to time $t$ is
 	&= \dfrac{1}{2} L i^2
 \end{align*}
 
+\newpage
 \part{Simple Circuits}
 
 \section{Equivalent Circuits}
@@ -560,25 +588,248 @@ The energy supplied to a load from time $t_0$ to time $t$ is
 	Two circuits are said to be equivalent if they have the same $v(t)$-$i(t)$ relationships.
 \end{definition}
 
+\begin{example}
+	\begin{figure}[H]
+		\begin{circuitikz}
+			\draw (0,0) to [R = $R_1$] (2,0) to [R = $R_2$] (4,0); 
+		\end{circuitikz}
+	\end{figure}
+	
+	Let the voltage across $R_1$ be $v_1$ and across $R_2$ be $v_2$.\\
+	Let the current through $R_1$ be $i_1$ and through $R_2$ be $i_2$.\\
+	Therefore,
+	\begin{align*}
+		v_1 &= f_1(i_1)\\
+		v_2 &= f_2(i_2)
+	\end{align*}
+	Therefore,
+	\begin{align*}
+		v &= v_1 + v_2\\
+		&= f_1(i_1) + f_2(i_2)\\
+		&= f_1(i) + f_2(i)\\
+		&= f_3(i)
+	\end{align*}
+	Therefore, the system of resistors is equivalent to a single resistor $R_3$.
+\end{example}
+
+\subsection{Series Connections}
+
+If circuit elements are connected in series, by \nameref{KCL}, the current passing through all of them is equal.
+By \nameref{KVL}, the net potential difference is the sum of the voltages across each of them.
+
+\subsubsection{Resistors in Series}
+
+\begin{figure}[H]
+	\begin{tikzpicture}
+		\draw (0,0) to [R = $R_1$] (2,0) to [R = $R_2$] (4,0);
+		\draw [dotted] (4,0) to (5,0);
+		\draw (5,0) to [R = $R_m$] (7,0);
+	\end{tikzpicture}
+\end{figure}
+
+\begin{align*}
+	v &= \sum_{k = 1}^{m} v_k\\
+	&= \sum_{k = 1}^{m} R_k i_k\\
+	&= \sum_{k = 1}^{m} R_k i\\
+	&= i \sum_{k = 1}^{m} R_k\\
+	\therefore v &= R i\\
+	\therefore R &= \sum_{k = 1}^{m} R_k
+\end{align*}
+
+\subsubsection{Voltage Sources in Series}
+
+\begin{figure}[H]
+	\begin{tikzpicture}
+		\draw (0,0) to [V = $V_1$] (2,0) to [V = $V_2$] (4,0);
+		\draw [dotted] (4,0) to (5,0);
+		\draw (5,0) to [V = $V_k$] (7,0);
+	\end{tikzpicture}
+\end{figure}
+
+By \nameref{KVL},
+\begin{align*}
+	v &= \sum_{k = 1}^{m} v_k
+\end{align*}
+
+\subsubsection{Half Wave Rectifier}
+
 \begin{figure}[H]
 	\begin{circuitikz}
-		\draw (0,0) to [R = $R_1$] (2,0) to [R = $R_2$] (4,0); 
+		\draw (0,0) to (2,0) to [R = $R_1$, v = $v_1$] (2,-2) to [Do, v = $ $] (2,-4) to (0,-4) to [sV = $v$] (0,0);
+	\end{circuitikz}
+	\caption{Half Wave Rectifier}
+\end{figure}
+
+\begin{figure}[H]
+	\begin{tikzpicture}
+		\begin{scope}[stealth-stealth, lightgray]
+			\draw (-5,0) -- (5,0) node [right] {$v$};
+			\draw (0,-5) -- (0,5) node [above] {$i$};
+		\end{scope}
+		
+		\begin{scope}
+			\draw [red] (-4,0) -- (0,0) -- (0,4);
+			\draw [blue] (-4,-4) -- (4,4);
+		\end{scope}
+	\end{tikzpicture}
+\end{figure}
+
+If the current flows in a direction such that the diode is in forward bias, it will allow the current to pass through.
+If the current is in the opposite direction, it will provide infinite resistance.\\
+Therefore, the wave representing the current in the circuit will be made up of only upper halves of the sine wave.
+
+\begin{figure}[H]
+	\begin{tikzpicture}
+		\begin{scope}[stealth-stealth, lightgray]
+			\draw (-5,0) -- (5,0) node [right] {$v$};
+			\draw (0,-5) -- (0,5) node [above] {$i$};
+		\end{scope}
+		
+		\begin{scope}[scale = 0.5]
+			\draw [domain = 0:pi] plot (\x, {sin(\x r)});
+			\draw (pi,0) -- (2*pi,0);
+			\draw [domain = 2*pi:3*pi] plot (\x, {sin(\x r)});
+		\end{scope}
+	\end{tikzpicture}
+\end{figure}
+
+\subsubsection{Capacitors in Series}
+
+\begin{align*}
+	v_k(t) &= v_k(0) + \dfrac{1}{C_k} \int\limits_{0}^{t} i_k(t) \dif t\\
+	v &= \sum_{k = 1}^{m} v_k(t)\\
+	&= \sum_{k = 1}^{m} v_k(0) + \left( \sum_{k = 1}^{m} \dfrac{1}{C_k} \right) \int\limits_{0}^{t} i(t) \dif t\\
+	\therefore v &= v(0) + \dfrac{1}{C} \int\limits_{0}^{t} i(t) \dif t\\
+	\therefore \dfrac{1}{C} &= \sum_{k = 1}^{m} \dfrac{1}{C_k}
+\end{align*}
+
+\subsubsection{Resistors in Series}
+
+\begin{figure}[H]
+	\begin{tikzpicture}
+	\draw (0,0) to [L = $L_1$] (2,0) to [L = $L_2$] (4,0);
+	\draw [dotted] (4,0) to (5,0);
+	\draw (5,0) to [L = $L_m$] (7,0);
+	\end{tikzpicture}
+\end{figure}
+
+\begin{align*}
+	v &= \sum_{k = 1}^{m} v_k\\
+	&= \sum_{k = 1}^{m} L_k \dod{i_k}{t}\\
+	&= \sum_{k = 1}^{m} L_k \dod{i}{t}\\
+	&= \dod{i}{t} \sum_{k = 1}^{m} L_k\\
+	\therefore v &= L \dod{i}{t}\\
+	\therefore L &= \sum_{k = 1}^{m} L_k
+\end{align*}
+
+\subsection{Parallel Connections}
+
+\subsubsection{Resistors in Parallel}
+
+\begin{figure}[H]
+	\begin{circuitikz}
+			\draw (0,0) to (1,0) to (2,1) to [R = $R_{1}$] (4,1) to (5,0) to (6,0);
+			\node [above] at (3,0) {$\vdots$};
+			\draw (0,0) to (1,0) to (2,-1) to [R = $R_{k}$] (4,-1) to (5,0) to (6,0);
 	\end{circuitikz}
 \end{figure}
 
-Let the voltage across $R_1$ be $v_1$ and across $R_2$ be $v_2$.\\
-Let the current through $R_1$ be $i_1$ and through $R_2$ be $i_2$.\\
-Therefore,
 \begin{align*}
-	v_1 &= f_1(i_1)\\
-	v_2 &= f_2(i_2)
+	i &= \sum_{k = 1}^{m} i_k\\
+	&= \sum_{k = 1}^{m} G_k v_k\\
+	&= v \sum_{k = 1}^{m} G_k\\
+	\therefore v &= G i\\
+	\therefore G &= \sum_{k = 1}^{m} G_k\\
+	\therefore \dfrac{1}{R} &= \sum_{k = 1}^{m} \dfrac{1}{R_k}
 \end{align*}
-Therefore,
+
+\subsubsection{Capacitors in Parallel}
+
 \begin{align*}
-	v &= v_1 + v_2\\
-	&= f_1(i_1) + f_2(i_2)\\
-	&= f_1(i) + f_2(i)\\
-	&= f_3(i)
+	i &= \sum_{k = 1}^{m} i_k\\
+	&= \sum_{k = 1}^{m} C_k \dod{v_k}{t}\\
+	&= \sum_{k = 1}^{m} C_k \dod{v}{t}\\
+	&= \dod{v}{t} \sum_{k = 1}^{m} C_k\\
+	\therefore i &= C \dod{v}{t}\\
+	\therefore C &= \sum_{k = 1}^{m} C_k
 \end{align*}
-Therefore, the system of resistors is equivalent to a single resistor $R_3$.
+
+\subsubsection{Resistors in Parallel}
+
+\begin{figure}[H]
+	\begin{circuitikz}
+		\draw (0,0) to (1,0) to (2,1) to [R = $R_{1}$] (4,1) to (5,0) to (6,0);
+		\node [above] at (3,0) {$\vdots$};
+		\draw (0,0) to (1,0) to (2,-1) to [R = $R_{k}$] (4,-1) to (5,0) to (6,0);
+	\end{circuitikz}
+\end{figure}
+
+\begin{align*}
+	i_k(t) &= i_k(0) + \dfrac{1}{L_k} \int\limits_{0}^(t) v_k(t) \dif t\\
+	i &= \sum_{k = 1}^{m} i_k(t)\\
+	&= \sum_{k = 1}^{m} i_k(0) + \sum_{k = 1}^{m} \left( \dfrac{1}{L_k} \int\limits_{0}^{t} v_k(t) \dif t \right)
+	&= \sum_{k = 1}^{m} i_k(0) + \sum_{k = 1}^{m} \left( \dfrac{1}{L_k} \int\limits_{0}^{t} v(t) \dif t \right)\\
+	&= \sum_{k = 1}^{m} i_k(0) + \left( \sum_{k = 1}^{m} \dfrac{1}{L_k} \right) \int\limits_{0}^{t} v(t) \dif t\\
+	\therefore i &= i(0) + \dfrac{1}{L} \int\limits_{0}^{t} v(t) \dif t\\
+	\therefore \dfrac{1}{L} &= \sum_{k = 1}^{m} \dfrac{1}{L_k}
+\end{align*}
+
+\begin{theorem}[Th\'{e}venin - Norton Theorem]
+	Let $\pi$ be a linear network connected by two terminals to an arbitrary load. $\pi$ comprises of independent sources, linear resistors, linear capacitors and linear inductors. These components may be time dependent. Let $\pi_0$ be the network derived from $\pi$ by zeroing all independent sources(A short is inserted in place of a voltage source, and a break is inserted in place of a current source). Let $e_{\textnormal{OC}}$ be the voltage of the open circuit $\pi$, i.e. without the load, between $1$ and $1'$. Let $i_{\textnormal{SC}}$ be the short circuit current flowing from $1$ to $1'$. Under these conditions for an arbitrary load, the voltage $v$ between $1$ and $1'$ and the current $i$ between $1$ and $1'$ through the load will not change if the network $\pi$ is replaced by the equivalent circuit of either Th\'{e}venin or Norton.
+	\begin{figure}[H]
+		\begin{tikzpicture}
+			\coordinate (1) at (4,0);
+			\coordinate (1') at (4,-4);
+			
+			\draw (0,0) -- (1) to [generic = load, v = $v$] (1') -- (0,-4) to [generic = $\pi$] (0,0);
+		\end{tikzpicture}
+	\end{figure}
+	\begin{figure}[H]
+		\begin{tikzpicture}
+			\coordinate (1) at (4,0);
+			\coordinate (1') at (4,-4);
+			
+			\draw (0,0) -- (1) to [generic = load, v = $v$, i = $i$] (1') -- (0,-4) to [V = $e_{\textnormal{OC}}$] (0,-2) to [generic = $\pi_0$] (0,0);
+		\end{tikzpicture}
+		\caption{Th\'{e}venin Equivalent Circuit}
+	\end{figure}
+	\begin{figure}[H]
+		\begin{tikzpicture}
+			\coordinate (1) at (4,0);
+			\coordinate (1') at (4,-4);
+			
+			\draw (0,0) -- (1) to [generic = load, v = $v$, i = $i$] (1') -- (0,-4) to [generic = $\pi_0$] (0,0);
+			
+			\draw (2,-4) to [I = $i_{\textnormal{SC}}$] (2,0);
+		\end{tikzpicture}
+		\caption{Norton Equivalent Circuit}
+	\end{figure}
+\end{theorem}
+
+\begin{question}
+	\begin{figure}[H]
+		\begin{circuitikz}
+			\coordinate (1) at (2,2);
+			\coordinate (1') at (2,0);
+			
+			\draw (0,0) to [V = $10 \si{\volt}$] (0,2) to [R = $5 \si{\ohm}$] (2,2) to [R = $5 \si{\ohm}$] (4,2);
+			\draw (4,0) to [V= $20 \si{\volt}$] (4,2);
+			\draw (0,0) -- (4,0);
+			\draw (1) to [generic] (1');
+		\end{circuitikz}
+	\end{figure}
+	\begin{figure}[H]
+		\begin{circuitikz}
+			\coordinate (1) at (2,2);
+			\coordinate (1') at (2,0);
+			
+			\draw (0,0) to (0,2) to [R = $5 \si{\ohm}$] (2,2) to [R = $5 \si{\ohm}$] (4,2);
+			\draw (4,0) to (4,2);
+			\draw (0,0) -- (4,0);
+			\draw (1) -- ++(90:1);
+			\draw (1') -- ++(-90:1);
+		\end{circuitikz}
+	\end{figure}
+\end{question}
+
 \end{document}
