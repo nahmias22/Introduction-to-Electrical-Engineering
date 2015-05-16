@@ -703,7 +703,7 @@ Therefore, the wave representing the current in the circuit will be made up of o
 	\therefore \dfrac{1}{C} &= \sum_{k = 1}^{m} \dfrac{1}{C_k}
 \end{align*}
 
-\subsubsection{Resistors in Series}
+\subsubsection{Inductors in Series}
 
 \begin{figure}[H]
 	\begin{tikzpicture}
@@ -754,13 +754,13 @@ Therefore, the wave representing the current in the circuit will be made up of o
 	\therefore C &= \sum_{k = 1}^{m} C_k
 \end{align*}
 
-\subsubsection{Resistors in Parallel}
+\subsubsection{Inductors in Parallel}
 
 \begin{figure}[H]
 	\begin{circuitikz}
-		\draw (0,0) to (1,0) to (2,1) to [R = $R_{1}$] (4,1) to (5,0) to (6,0);
+		\draw (0,0) to (1,0) to (2,1) to [L = $L_{1}$] (4,1) to (5,0) to (6,0);
 		\node [above] at (3,0) {$\vdots$};
-		\draw (0,0) to (1,0) to (2,-1) to [R = $R_{k}$] (4,-1) to (5,0) to (6,0);
+		\draw (0,0) to (1,0) to (2,-1) to [L = $L_{k}$] (4,-1) to (5,0) to (6,0);
 	\end{circuitikz}
 \end{figure}
 
